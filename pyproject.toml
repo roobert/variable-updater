@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "variable-updater"
+version = "0.0.1"
+description = ""
+authors = ["Rob Wilson <roobert@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requests = "^2.22.0"
+hvac = "^0.9.6"
+pyyaml = "^5.2"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+pylint = "^2.4.4"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry.scripts]
+variable-updater = 'variable_updater.variable_updater:main'
+
+[tool.dephell.main]
+from = {format = "poetry", path = "pyproject.toml"}
+to = {format = "setuppy", path = "setup.py"}

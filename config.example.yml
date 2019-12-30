@@ -1,0 +1,5 @@
+variables:
+  - workspace: test
+    repo: terraform
+    key: VAULT_PASSWORD_REPO
+    value: app/variable-updater/variables/aws-repo-user-password
