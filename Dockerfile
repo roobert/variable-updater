@@ -1,24 +1,30 @@
-FROM python:3.6.6-alpine3.7
+FROM python:3.7.4-alpine3.10 as base
 
 ENV PYTHONFAULTHANDLER=1 \
-    PYTHONUNBUFFERED=1 \
     PYTHONHASHSEED=random \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+FROM base as builder
+
+ENV PIP_DEFAULT_TIMEOUT=100 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
     POETRY_VERSION=1.0.0
 
-RUN apk add --no-cache --virtual .build-deps gcc python3-dev alpine-sdk
-
+RUN apk add --no-cache gcc python3-dev alpine-sdk libffi-dev openssl-dev musl-dev
 RUN pip install "poetry==$POETRY_VERSION"
-WORKDIR /code
-COPY poetry.lock pyproject.toml /code/
+RUN python -m venv /venv
 
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-dev --no-interaction --no-ansi
+COPY poetry.lock pyproject.toml /app/
+RUN poetry export -f requirements.txt | /venv/bin/pip install -r /dev/stdin
 
-RUN apk del .build-deps
+COPY . .
+RUN poetry build && /venv/bin/pip install dist/*.whl
 
-COPY . /code
+FROM base as final
 
-CMD [ "variable-updater", "--config", "config.example.yml" ]
+COPY --from=builder /venv /venv
+
+CMD [ "/venv/bin/variable-updater", "--config", "config.example.yml" ]
