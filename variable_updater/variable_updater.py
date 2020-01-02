@@ -22,21 +22,9 @@ DESCRIPTION = "update bitbucket variables with values stored in vault"
 def parse_args():
     parser = argparse.ArgumentParser(description=DESCRIPTION)
 
-    parser.add_argument(
-        "-u", "--vault-key-username", help="vault key to read bitbucket username from"
-    )
-    parser.add_argument(
-        "-p", "--vault-key-password", help="vault key to read bitbucket password from"
-    )
     parser.add_argument("-c", "--config", help="config file")
 
-    args = parser.parse_args()
-
-    # if len(sys.argv) == 0:
-    #    parser.print_help()
-    #    sys.exit(1)
-
-    return args
+    return parser.parse_args()
 
 
 def variables(config):
@@ -96,6 +84,9 @@ def main():
         vault_server = os.environ["VAULT_ADDR"]
         vault_username = os.environ["VAULT_USERNAME"]
         vault_password = os.environ["VAULT_PASSWORD"]
+        vault_bitbucket_key_mount  = os.environ["VAULT_BITBUCKET_KEY_MOUNT"]
+        vault_bitbucket_username_key = os.environ["VAULT_BITBUCKET_USERNAME_KEY"]
+        vault_bitbucket_password_key = os.environ["VAULT_BITBUCKET_PASSWORD_KEY"]
     except KeyError as error:
         print(f"error: failure reading environment variable: {error}")
         sys.exit(1)
@@ -103,10 +94,10 @@ def main():
     vault = Vault(server=vault_server, username=vault_username, password=vault_password)
 
     bitbucket_username = vault.read(
-        "/secret", "app/variable-updater/bitbucket-username"
+        vault_bucket_key_mount, vault_bitbucket_username_key
     )
     bitbucket_password = vault.read(
-        "/secret", "app/variable-updater/bitbucket-password"
+        vault_bucket_key_mount, vault_bitbucket_password_key
     )
 
     # NOTE: generate an "app password" with edit variables permissions
