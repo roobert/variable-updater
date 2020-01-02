@@ -113,7 +113,7 @@ def main():
     requester = Requester(username=bitbucket_username, password=bitbucket_password,)
 
     for variable in variables(args.config):
-        value = vault.read("/secret", variable["value"])
+        value = vault.read(variable["vault_mount"], variable["value"])
 
         try:
             variable = Variable(
