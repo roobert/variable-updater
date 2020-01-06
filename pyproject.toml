@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "variable-updater"
-version = "0.0.7"
+version = "0.0.8"
 description = ""
 authors = ["Rob Wilson <roobert@gmail.com>"]
 
