@@ -35,18 +35,21 @@ class Vault:
         except hvac.exceptions.InvalidRequest as error:
             raise VaultServerError(f"failed to connect to vault server: {error}")
 
-    def read(self, mount, key):
+    def read(self, mount, path, key):
         try:
-            print(f"==> vault read: {key}")
+            print(f"==> vault read: {mount}:{path}:{key}")
             data = self.vault.secrets.kv.v2.read_secret_version(
-                mount_point=mount, path=key
+                mount_point=mount, path=path
             )
 
             if not data:
-                raise VaultKeyError(f"no data found for key: {key}")
+                raise VaultKeyError(
+                    f"no data found for mount:path:key: {mount}:{path}:{key}"
+                )
 
-            # NOTE: our key values are always under the key named "value"
-            return data["data"]["data"]["value"]
+            return data["data"]["data"][key]
 
         except hvac.exceptions.Forbidden as error:
-            raise VaultKeyError(f"could not read key '{key}': {error}")
+            raise VaultKeyError(
+                f"could not read: mount:path:key: {mount}:{path}:{key}: {error}"
+            )
