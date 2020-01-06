@@ -51,7 +51,7 @@ def variable_updater():
                 requester=bitbucket_requester(vault, config),
                 workspace=variable["bitbucket_workspace"],
                 repo=variable["bitbucket_repo"],
-                key=variable["bitwarden_variable"],
+                key=variable["bitbucket_variable"],
                 value=value,
             )
         except AttributeError as error:
