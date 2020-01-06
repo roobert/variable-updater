@@ -55,11 +55,11 @@ def variable_updater():
                 f"missing required key from config file variable mapping: {error}"
             )
 
-        print(f"vault read: mount:path:key: {vault_mount}:{vault_path}:{vault_key}")
+        print(f"vault read: {vault_mount}:{vault_path} - {vault_key}")
         value = vault.read(vault_mount, vault_path, vault_key)
 
         print(
-            f"bitbucket write: workspace:repo:key: {bitbucket_workspace}:{bitbucket_repo}:{bitbucket_key}"
+            f"bitbucket write: {bitbucket_workspace}/{bitbucket_repo} - {bitbucket_key}"
         )
 
         BitBucketVariable(

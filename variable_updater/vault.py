@@ -7,6 +7,10 @@ class VaultAuthError(Exception):
     pass
 
 
+class VaultKeyAccessError(Exception):
+    pass
+
+
 class VaultServerError(Exception):
     pass
 
@@ -42,13 +46,11 @@ class Vault:
             )
 
             if not data:
-                raise VaultKeyError(
-                    f"no data found for mount:path:key: {mount}:{path}:{key}"
-                )
+                raise VaultKeyError(f"no data found for: {mount}:{path} - {key}")
 
             return data["data"]["data"][key]
 
         except hvac.exceptions.Forbidden as error:
-            raise VaultKeyError(
-                f"could not read: mount:path:key: {mount}:{path}:{key}: {error}"
+            raise VaultKeyAccessError(
+                f"could not read: {mount}:{path} - {key}: {error}"
             )

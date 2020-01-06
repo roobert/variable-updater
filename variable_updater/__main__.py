@@ -7,7 +7,7 @@ from requests.exceptions import HTTPError, RequestException
 
 from .cli import EnvironmentVariableError
 from .config_file import ConfigFileOpenError
-from .vault import VaultKeyError, VaultServerError, VaultAuthError
+from .vault import VaultKeyError, VaultKeyAccessError, VaultServerError, VaultAuthError
 from .bitbucket_requester import BitBucketGetError
 from .variable_updater import ConfigFileVariableError, variable_updater
 
@@ -24,6 +24,7 @@ def main():
         ConfigFileVariableError,
         EnvironmentVariableError,
         VaultKeyError,
+        VaultKeyAccessError,
         VaultServerError,
         VaultAuthError,
     ) as error:
