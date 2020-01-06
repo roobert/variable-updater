@@ -23,7 +23,7 @@ def bitbucket_password(vault, config):
     )
 
 
-def bitbucket_requester(vault, config):
+def bitbucket_requester_client(vault, config):
     return BitBucketRequester(
         username=bitbucket_username(vault, config),
         password=bitbucket_password(vault, config),
@@ -40,21 +40,32 @@ def variable_updater():
     args = parse_args()
     config = environment_variables()
     vault = vault_client(config)
+    bitbucket_requester = bitbucket_requester_client(vault, config)
 
     for variable in variables(args.config):
-        value = vault.read(
-            variable["vault_mount"], variable["vault_path"], variable["vault_key"]
+        try:
+            vault_mount = variable["vault_mount"]
+            vault_path = variable["vault_path"]
+            vault_key = variable["vault_key"]
+            bitbucket_workspace = variable["bitbucket_workspace"]
+            bitbucket_repo = variable["bitbucket_repo"]
+            bitbucket_key = variable["bitbucket_variable"]
+        except KeyError as error:
+            raise ConfigFileVariableError(
+                f"missing required key from config file variable mapping: {error}"
+            )
+
+        print(f"vault read: mount:path:key: {vault_mount}:{vault_path}:{vault_key}")
+        value = vault.read(vault_mount, vault_path, vault_key)
+
+        print(
+            f"bitbucket write: workspace:repo:key: {bitbucket_workspace}:{bitbucket_repo}:{bitbucket_key}"
         )
 
-        try:
-            variable = BitBucketVariable(
-                requester=bitbucket_requester(vault, config),
-                workspace=variable["bitbucket_workspace"],
-                repo=variable["bitbucket_repo"],
-                key=variable["bitbucket_variable"],
-                value=value,
-            )
-        except AttributeError as error:
-            raise ConfigFileVariableError(f"key failure for config file: {error}")
-
-        variable.upsert()
+        BitBucketVariable(
+            requester=bitbucket_requester,
+            workspace=bitbucket_workspace,
+            repo=bitbucket_repo,
+            key=bitbucket_key,
+            value=value,
+        ).upsert()

@@ -37,7 +37,6 @@ class Vault:
 
     def read(self, mount, path, key):
         try:
-            print(f"==> vault read: {mount}:{path}:{key}")
             data = self.vault.secrets.kv.v2.read_secret_version(
                 mount_point=mount, path=path
             )
