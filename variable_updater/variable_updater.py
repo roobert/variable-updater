@@ -7,6 +7,10 @@ from .bitbucket_requester import BitBucketRequester
 from .bitbucket_variable import BitBucketVariable
 
 
+class ConfigFileVariableError(Exception):
+    pass
+
+
 def variable_updater():
     args = parse_args()
     config = environment_variables()
@@ -39,6 +43,6 @@ def variable_updater():
                 value=value,
             )
         except AttributeError as error:
-            raise ConfigFileError(f"key failure for config file: {error}")
+            raise ConfigFileVariableError(f"key failure for config file: {error}")
 
         variable.upsert()

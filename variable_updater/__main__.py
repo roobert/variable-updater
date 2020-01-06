@@ -1,23 +1,24 @@
 #!/usr/bin/env python
 
 import sys
+
 from urllib3.exceptions import ProtocolError
 from requests.exceptions import ConnectionError, HTTPError, RequestException
 
 from .cli import EnvironmentVariableError
-from .config_file import ConfigFileError
+from .config_file import ConfigFileOpenError
 from .vault import VaultKeyError, VaultServerError, VaultAuthError
 from .bitbucket_requester import BitBucketGetError
-from .variable_updater import variable_updater
+from .variable_updater import variable_updater, ConfigFileVariableError
 
 
 def main():
     try:
         variable_updater()
     except (
-        ConfigFileError,
+        ConfigFileOpenError,
+        ConfigFileVariableError,
         EnvironmentVariableError,
-        AttributeError,
         VaultKeyError,
         VaultServerError,
         VaultAuthError,
@@ -25,9 +26,7 @@ def main():
         ProtocolError,
         ConnectionError,
         HTTPError,
-        OSError,
         RequestException,
-        Exception,
     ) as error:
         print(f"{error.__class__.__name__}: {error}")
         sys.exit(1)

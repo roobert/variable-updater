@@ -3,7 +3,7 @@
 import yaml
 
 
-class ConfigFileError(Exception):
+class ConfigFileOpenError(Exception):
     pass
 
 
@@ -12,4 +12,4 @@ def variables(config):
         with open(config, "r") as data:
             return yaml.safe_load(data)["variables"]
     except Exception as error:
-        raise ConfigFileError(f"failed to load config file: {error}")
+        raise ConfigFileOpenError(f"failed to load config file: {error}")
