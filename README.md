@@ -2,13 +2,24 @@
 
 ## About
 
-Update BitBucket pipeline variables with values from Vault
+Set BitBucket pipeline variables with values from Vault
 
 ## Install
 
 ```
 pip install variable-updater
 ```
+
+## Docker
+
+```
+make docker
+```
+
+## Requirements
+
+* BitBucket "app password" with edit variables permission
+* Vault user with permission to read keys to use as source for BitBucket variables
 
 ## Example
 

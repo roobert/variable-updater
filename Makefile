@@ -1,6 +1,9 @@
 install:
 	@poetry install
 
+docker:
+	docker build . --tag variable-updater
+
 clean:
 	@rm -vrf variable_updater.egg-info venv
 
