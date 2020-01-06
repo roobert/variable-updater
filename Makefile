@@ -10,7 +10,7 @@ docker:
 clean:
 	@rm -vrf ${APP}.egg-info venv
 
-dev-run:
+dev:
 	@poetry run ${APP}
 
 venv:
