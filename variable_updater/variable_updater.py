@@ -11,25 +11,35 @@ class ConfigFileVariableError(Exception):
     pass
 
 
-def variable_updater():
-    args = parse_args()
-    config = environment_variables()
-
-    vault = Vault(
-        server=config.server, username=config.username, password=config.password
-    )
-
-    bitbucket_username = vault.read(
+def bitbucket_username(vault, config):
+    return vault.read(
         config.bitbucket_key_mount, config.bitbucket_username_key, "value"
     )
-    bitbucket_password = vault.read(
+
+
+def bitbucket_password(vault, config):
+    return vault.read(
         config.bitbucket_key_mount, config.bitbucket_password_key, "value"
     )
 
-    # NOTE: requires a bitbucket "app password" with edit variables permissions
-    requester = BitBucketRequester(
-        username=bitbucket_username, password=bitbucket_password,
+
+def bitbucket_requester(vault, config):
+    return BitBucketRequester(
+        username=bitbucket_username(vault, config),
+        password=bitbucket_password(vault, config),
     )
+
+
+def vault_client(config):
+    return Vault(
+        server=config.server, username=config.username, password=config.password
+    )
+
+
+def variable_updater():
+    args = parse_args()
+    config = environment_variables()
+    vault = vault_client(config)
 
     for variable in variables(args.config):
         value = vault.read(
@@ -38,7 +48,7 @@ def variable_updater():
 
         try:
             variable = BitBucketVariable(
-                requester=requester,
+                requester=bitbucket_requester(vault, config),
                 workspace=variable["bitbucket_workspace"],
                 repo=variable["bitbucket_repo"],
                 key=variable["bitwarden_variable"],
