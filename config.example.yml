@@ -1,7 +1,7 @@
 variables:
-  - workspace: test
-    repo: test
+  - bitbucket_workspace: test
+    bitbucket_repo: test
+    bitwarden_variable: API_KEY
     vault_mount: secret
     vault_path: path/to/my/secret
     vault_key: value
-    bitwarden_variable: API_KEY

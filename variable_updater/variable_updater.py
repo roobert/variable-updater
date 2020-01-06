@@ -39,8 +39,8 @@ def variable_updater():
         try:
             variable = BitBucketVariable(
                 requester=requester,
-                workspace=variable["workspace"],
-                repo=variable["repo"],
+                workspace=variable["bitbucket_workspace"],
+                repo=variable["bitbucket_repo"],
                 key=variable["bitwarden_variable"],
                 value=value,
             )
