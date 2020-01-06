@@ -10,7 +10,6 @@ dev-run:
 setup-convert:
 	@dephell deps convert
 
-# venv can be useful for debugging..
 venv:
 	@virtualenv venv
 	@echo "# run:"

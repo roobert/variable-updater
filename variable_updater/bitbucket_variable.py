@@ -1,22 +1,11 @@
 #!/usr/bin/env python3
 
-import json
-import requests
-import logging
-from time import sleep
 from urllib.parse import urljoin
 from dataclasses import dataclass
 
-logging.basicConfig(
-    format="%(levelname)s - %(message)s",
-    datefmt="%m/%d/%Y %I:%M:%S %p",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
-
 
 @dataclass
-class Variable:
+class BitBucketVariable:
     requester: str
     workspace: str
     repo: str
@@ -43,19 +32,15 @@ class Variable:
             self.insert()
 
     def select(self):
-        logger.info(f"selecting key: {self.workspace}/{self.repo}:{self.key}")
         return self.requester.get(self.url())
 
     def insert(self):
-        logger.info(f"inserting key: {self.workspace}/{self.repo}:{self.key}")
         return self.requester.post(self.url(), self.payload())
 
     def delete(self):
-        logger.info(f"deleting key: {self.workspace}/{self.repo}:{self.key}")
         return self.requester.delete(self.url(variable=True))
 
     def update(self):
-        logger.info(f"updating key: {self.workspace}/{self.repo}:{self.key}")
         return self.requester.put(self.url(variable=True), self.payload())
 
     def payload(self):

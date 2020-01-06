@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
 
-import json
 import requests
-import logging
-from urllib.parse import urljoin
 from dataclasses import dataclass
 
-logging.basicConfig(
-    format="%(levelname)s - %(message)s",
-    datefmt="%m/%d/%Y %I:%M:%S %p",
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
+
+class BitBucketGetError(Exception):
+    pass
 
 
 @dataclass
-class Requester:
+class BitBucketRequester:
     username: str
     password: str
 
@@ -27,9 +21,7 @@ class Requester:
 
     def get(self, url):
         response = requests.get(url, auth=self.auth(), headers=self.headers())
-        if response.status_code != 200:
-            logger.critical(f"error: {response.status_code}")
-            exit(1)
+        response.raise_for_status()
         return response
 
     def put(self, url, payload):
