@@ -4,10 +4,6 @@ import argparse
 from .version import __version__
 
 
-class EnvironmentVariableError(Exception):
-    pass
-
-
 def version():
     return __version__
 
