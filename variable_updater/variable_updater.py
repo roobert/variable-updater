@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from .cli import parse_args, environment_variables
+from .cli import parse_args
 from .config_file import variables
+from .environment_variables import environment_variables
 from .vault import Vault
 from .bitbucket_requester import BitBucketRequester
 from .bitbucket_variable import BitBucketVariable

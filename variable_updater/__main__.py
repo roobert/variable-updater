@@ -5,7 +5,7 @@ import sys
 from urllib3.exceptions import ProtocolError
 from requests.exceptions import HTTPError, RequestException
 
-from .cli import EnvironmentVariableError
+from .environment_variables import EnvironmentVariableError
 from .config_file import ConfigFileOpenError
 from .vault import VaultKeyError, VaultKeyAccessError, VaultServerError, VaultAuthError
 from .bitbucket_requester import BitBucketGetError
